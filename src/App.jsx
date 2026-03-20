@@ -5,12 +5,16 @@ import heroImg from './assets/hero.png'
 import './App.css'
 import MyComponent2, { Child, Child2, MyComponent } from './react_study/ex01_basic/ex01_component'
 import UseStateEx from './react_study/ex02_useState/ex01_basic'
+import TitleList from './react_study/ex02_useState/ex03_map'
+import FlexEx from './react_study/ex02_useState/ex05_flex'
+import ObjectEx from './react_study/ex02_useState/ex06_object'
+import UseStateArr from './react_study/ex02_useState/ex04_arr'
 
 function App() {
   const [title, setTitle] = useState("기본 제목")
   return(
     <>
-      <h1>{title}</h1>
+      {/* <h1>{title}</h1>
       <div>
         <button onClick={()=>{
           {title === '기본 제목' ? (
@@ -38,7 +42,11 @@ function App() {
         border:"2px solid"
       }}/>
 
-      <UseStateEx/>
+      <UseStateEx/>  
+      <TitleList/>
+      <UseStateArr/>
+      <FlexEx/>
+      <ObjectEx/>*/} 
     </>
   )
 }

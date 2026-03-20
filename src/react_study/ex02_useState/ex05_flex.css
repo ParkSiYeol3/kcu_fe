@@ -1,0 +1,20 @@
+.box {
+    display: flex;              /* Flexbox 레이아웃 사용 (가로/세로 한 축 정렬) */
+    align-items: center;        /* 교차축(세로) 방향 가운데 정렬 */
+    justify-content: space-between; /* 주축(가로) 방향: 양 끝에 배치하고 사이 간격 자동 분배 */
+    gap: 8px;                   /* 아이템 사이 간격 8px */
+    
+    border: 3px solid blue;    /* 흰색 실선 테두리 */
+    padding: 10px;              /* 안쪽 여백 10px */
+    margin-bottom: 10px;        /* 바깥쪽 아래 여백 10px */
+}
+
+.buttonBox {
+  display: flex;
+  justify-content: center;
+  gap: 7px;
+}
+
+button {
+  font-size:20px;
+}
