@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 
 export default function Timer() {
     const [seconds, setSeconds] = useState(0);
-    const [isRunning, setIsRuuning] = useState(false);
+    const [isRunning, setIsRunning] = useState(false);
 
     useEffect(() => {
         if (isRunning) {
@@ -18,7 +18,7 @@ export default function Timer() {
     return (
         <div>
             <h1>{seconds}초</h1>
-            <button onClick={() => setIsRuuning(prev => !prev)}>
+            <button onClick={() => setIsRunning(prev => !prev)}>
                 {isRunning ? '정지' : '시작'}
             </button>
         </div>
