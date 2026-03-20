@@ -5,12 +5,11 @@ export default function UseStateArr() {
     const [thumbsup, setThumbsup] = useState([0, 0, 0])
 
     function addThumbsup(idx) {
-    setThumbsup(thumbsup.map((cnt,i)=> {
-      if (i === idx) {
-        return cnt + 1
-      }
-      return cnt
-    }))
+    setThumbsup((prev) => {
+      return prev.map( (cnt, i) => {
+        return (i === idx) ? cnt+1 : cnt
+      })
+    })
   }
 
   return (
@@ -22,7 +21,8 @@ export default function UseStateArr() {
         }}>
       {
         titleList.map((title,idx)=>(
-          <div style={{
+          <div key={idx} 
+          style={{
             height:100, 
             width:100,
             padding:10, 

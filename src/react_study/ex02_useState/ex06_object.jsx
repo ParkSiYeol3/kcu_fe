@@ -9,8 +9,9 @@ export default function ObjectEx() {
     })
 
     const changeHandler = (e) => {
-        const newForm = {...form, [e.target.name]: e.target.value}
-        setForm(newForm)
+        // const newForm = {...form, [e.target.name]: e.target.value}
+        // setForm(newForm)
+        setForm(prev => ({...prev, [e.target.name]:e.target.value}))
     }
 
     return (
