@@ -38,7 +38,7 @@ import { useState, useEffect } from "react";
 
 const STORAGE_KEY = "todolist_items";
 
-export default function App() {
+export default function ToDoList() {
   // ── 상태 정의 ──────────────────────────────────────────────
   const [todos, setTodos] = useState(() => {
     try {
