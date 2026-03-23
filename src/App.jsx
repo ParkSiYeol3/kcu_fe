@@ -12,6 +12,8 @@ import UseStateArr from './react_study/ex02_useState/ex04_arr'
 import Filter from './react_study/ex02_useState/ex07_filter'
 import AddRemove from './react_study/ex02_useState/ex08_prev'
 import Timer from './react_study/ex03_useEffect/ex02_Timer'
+import TimerTwo from './react_study/ex03_useEffect/Timer_박시열'
+import ToDoList from './react_study/ex03_useEffect/ToDoList_박시열'
 
 function App() {
   const [title, setTitle] = useState("기본 제목")
@@ -51,9 +53,10 @@ function App() {
       <FlexEx/>
       <ObjectEx/>
       <Filter/>
-      <AddRemove/>*/}
+      <AddRemove/>
       <Timer/>
-      
+      <TimerTwo/>*/}
+      <ToDoList/>
     </>
   )
 }
