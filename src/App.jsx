@@ -10,10 +10,13 @@ import FlexEx from './react_study/ex02_useState/ex05_flex'
 import ObjectEx from './react_study/ex02_useState/ex06_object'
 import UseStateArr from './react_study/ex02_useState/ex04_arr'
 import Filter from './react_study/ex02_useState/ex07_filter'
-import AddRemove from './react_study/ex02_useState/ex08_prev'
+import AddRemove from './react_study/ex04_useRef/ex01_useRef'
 import Timer from './react_study/ex03_useEffect/ex02_Timer'
 import TimerTwo from './react_study/ex03_useEffect/Timer_박시열'
 import ToDoList from './react_study/ex03_useEffect/ToDoList_박시열'
+import TestContext from './react_study/ex05_useContext/ex01_noContext'
+import LangComp from './react_study/ex05_useContext/ex03_language'
+import MyApp from './react_study/ex05_useContext/ex05_useContext'
 
 function App() {
   const [title, setTitle] = useState("기본 제목")
@@ -55,8 +58,11 @@ function App() {
       <Filter/>
       <AddRemove/>
       <Timer/>
-      <TimerTwo/>*/}
+      <TimerTwo/>
       <ToDoList/>
+      <TestContext/>
+      <LangComp/>*/}
+      <MyApp/>
     </>
   )
 }
