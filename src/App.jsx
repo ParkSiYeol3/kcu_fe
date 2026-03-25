@@ -17,6 +17,12 @@ import ToDoList from './react_study/ex03_useEffect/ToDoList_박시열'
 import TestContext from './react_study/ex05_useContext/ex01_noContext'
 import LangComp from './react_study/ex05_useContext/ex03_language'
 import MyApp from './react_study/ex05_useContext/ex05_useContext'
+import ReducerEx from './react_study/ex06_useReducer/ex02_useReducer'
+import InfoList from './react_study/ex06_useReducer/ex04_destructuring'
+import BookList from './react_study/ex06_useReducer/ex04_destructuring'
+import ReducerCounter from './react_study/ex06_useReducer/ex05_counter'
+import ExpensiveCalc from './react_study/ex07_useMemo/ex01_expensiveCalc'
+import UseCallbackEx from './react_study/ex08_useCallback/ex01_useCallback'
 
 function App() {
   const [title, setTitle] = useState("기본 제목")
@@ -61,8 +67,13 @@ function App() {
       <TimerTwo/>
       <ToDoList/>
       <TestContext/>
-      <LangComp/>*/}
+      <LangComp/>
       <MyApp/>
+      <ReducerEx/>
+      <BookList/>
+      <ReducerCounter/> 
+      <ExpensiveCalc/>*/}
+      <UseCallbackEx/>
     </>
   )
 }
