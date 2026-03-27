@@ -1,10 +1,5 @@
 import axios from "axios";
 
-// axios.get("https://pokeapi.co/api/v2/pokemon/1")
-//   .then(res=>{
-//     console.log(res.data.name)
-//   })
-
 export async function getPokemon(id) {
   try {
     const [res, speciesRes] =await Promise.all([

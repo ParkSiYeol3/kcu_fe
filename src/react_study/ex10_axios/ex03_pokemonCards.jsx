@@ -1,4 +1,4 @@
-import PokemonCard from "./ex02_pokemonCard";
+import PokemonCard from "./ex02_pokemonCard"
 
 export default function PokemonCards() {
   return (
@@ -10,10 +10,11 @@ export default function PokemonCards() {
       }}
     >
       {
-        //TODO - PokemonCard 9장을 배치하기
-        new Array(9).fill(null).map((_, i) => (
-          <PokemonCard key={i + 1} id={i + 1} />
-        ))
+      //TODO - PokemonCard 9장을 배치하기
+        new Array(500).fill(0).map((n, i)=>{
+          return <PokemonCard key={i} id={i+1}/>
+        })
+      
       }
     </div>
   )

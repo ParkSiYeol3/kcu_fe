@@ -1,13 +1,18 @@
-import { Box, Heading, HStack } from "@chakra-ui/react"
-import { ColorModeButton } from "./components/ui/color-mode"
+import Layout from "./components/Layout"
+import About from "./pages/About"
+import PokemonDetails from "./pages/PokemonDetails"
+import PokemonCards from "./pages/pokemonCards"
+import { Route, Routes } from "react-router-dom"
+
 function App() {
   return(
-    <Box p={6}>
-      <HStack justify={'space-between'}>
-        <Heading size='3xl' mb={2}>Hello, chakra!</Heading>
-          <ColorModeButton/>
-      </HStack>
-    </Box>
+    <Routes>
+      <Route path="/" element={<Layout/>}>
+        <Route index element={<PokemonCards/>}/>
+        <Route path="about" element={<About/>}/>
+        <Route path="pokemon/:id" element={<PokemonDetails/>}/>
+      </Route>
+    </Routes>
   )
 }
 
