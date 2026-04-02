@@ -1,11 +1,16 @@
 import { Box, Button } from "@chakra-ui/react"
 import GoogleIcon from "../assets/google-svgrepo-com.svg"
-import { googleSignIn } from "../services/auth_google_sign_in"
+import { toaster } from "./ui/toaster"
+import authService from "../services/authService"
 
 export default function GoogleLoginButton() {
+  const {loginWithGoogle} = authService();
   const handleGoogleLogin = async () => {
     try {
-      const {user} = await googleSignIn()
+      const {user} = await loginWithGoogle();
+      toaster.create({
+        description: `${user}`
+      })
     } catch(err) {
       console.error(err)
     }

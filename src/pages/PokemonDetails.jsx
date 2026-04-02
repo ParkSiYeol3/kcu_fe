@@ -95,11 +95,11 @@ export default function PokemonDetails() {
                 <Text>{pokemon?.abilities.join(', ')}</Text>
               </Box>
               <Box>
-                <Text fontWeight="bold">🌍 세대 / 색깔 / 서식지</Text>
-                <Text>{pokemon?.generation} / {pokemon?.color} / {pokemon?.habitat}</Text>
+                <Text fontWeight="bold">🌍 세대 / 서식지</Text>
+                <Text>{pokemon?.generation} / {pokemon?.habitat}</Text>
               </Box>
               <Box>
-                <Text fontWeight="bold">🏅 분류</Text>
+                <Text fontWeight="bold">📎 분류</Text>
                 <Box>
                   {pokemon?.isLegendary && <Badge colorPalette="yellow" mr={1}>전설</Badge>}
                   {pokemon?.isMythical && <Badge colorPalette="purple" mr={1}>환상</Badge>}
@@ -107,7 +107,7 @@ export default function PokemonDetails() {
                 </Box>
               </Box>
               <Box>
-                <Text fontWeight="bold">📖 도감 설명</Text>
+                <Text fontWeight="bold">ⓘ 정보</Text>
                 <Text>{pokemon?.description}</Text>
               </Box>
             </Stack>

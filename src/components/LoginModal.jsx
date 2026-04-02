@@ -1,58 +1,48 @@
 
-import { Button, Dialog, Field, Fieldset, HStack, Icon, Input, Separator, Text } from "@chakra-ui/react";
-import { useContext, useEffect, useState } from "react";
+import { Button, Dialog, Field, Fieldset, HStack, Icon, Input, Separator, Text, Toaster } from "@chakra-ui/react";
+import { useContext, useState } from "react";
 import { FaX } from "react-icons/fa6";
 import { AuthContext } from "../contexts/AuthProvider";
-import { login, logout, onAuthStateChange } from "../services/auth";
 import { PasswordInput } from "./ui/password-input";
 import GoogleLoginButton from "./GoogleLoginButton";
+import MenuWithAvatar from "./MenuWithAvatar";
+import { firebaseErrorMessages } from "../config/firebaseError";
+import authService from "../services/authService";
 
 
 export default function LoginModal() {
   const [open, setOpen] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [loginError, setLoginError] = useState(false);
-  const {user, setUser} = useContext(AuthContext)
+  const [loginError, setLoginError] = useState("");
+  const {user, setUser} = useContext(AuthContext);
+  const {loginWithEmail} = authService();
 
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
-      const loginUser = await login(email, password)
+      const loginUser = await loginWithEmail(email, password)
       setUser(loginUser);
       setOpen(false);
       setEmail("");
       setPassword("");
       setLoginError(false);
+
     } catch (err) {
       console.error(err);
-      setLoginError(true)
+      const errMsg = firebaseErrorMessages[err.code] || "로그인에 실패했습니다."
+      setLoginError(errMsg)
     }
   }
 
-  const handleLogout = async () => {
-    await logout();
-    setUser(null);
-  }
-
-  useEffect(()=>{
-    const unsubscribe = onAuthStateChange((loginUser)=>{
-      console.log("onAuthStateChange 실행", new Date())
-      setUser(loginUser);
-    })
-    return ()=>unsubscribe()
-  }, [])
-
-
-
-  if (user) {
-    return (
-      <Button size='sm' variant='outline' onClick={handleLogout}>
-        로그아웃
-      </Button>
-    )
-  }
-
+  // useEffect(()=>{
+  //   const unsubscribe = onAuthStateChange((loginUser)=>{
+  //     console.log("onAuthStateChange 실행")
+  //     console.log(loginUser)
+  //     setUser(loginUser);
+  //   })
+  //   return ()=>unsubscribe()
+  // }, [])
 
 
   return (
@@ -100,10 +90,11 @@ export default function LoginModal() {
                   onChange={(e)=>{
                     return setPassword(e.target.value)
                   }}
+                  onKeyDown={(e) => e.key === 'Enter' && handleLogin(e)}
                 />
               </Field.Root>
               <Fieldset.ErrorText justifyContent="center">
-                로그인에 실패했습니다.
+                {loginError || "로그인에 실패했습니다."}
               </Fieldset.ErrorText>
               <Button
                 type="submit"
@@ -115,13 +106,13 @@ export default function LoginModal() {
               </Button>
             </Fieldset.Root>
             <HStack my={4}>
-              <Separator />
+              <Separator flex="1"/>
               <Text
                 px={2} color="gray.500" fontSize="sm"
               >
                 또는
               </Text>
-              <Separator />
+              <Separator flex="1"/>
             </HStack>
             <GoogleLoginButton />
           </Dialog.Body>
