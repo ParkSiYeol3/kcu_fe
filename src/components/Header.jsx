@@ -1,6 +1,7 @@
 import { Box, Button, Container, HStack } from "@chakra-ui/react";
 import { Link } from "react-router-dom";
 import { ColorModeButton } from "./ui/color-mode";
+import LoginModal from "./LoginModal";
 
 export default function Header() {
   return (
@@ -26,7 +27,7 @@ export default function Header() {
             </HStack>
         </Box>
         <HStack>
-            <Button size={'sm'} variant={'outline'}>로그인</Button>
+            <LoginModal/>
             <ColorModeButton/>
         </HStack>
       </HStack>

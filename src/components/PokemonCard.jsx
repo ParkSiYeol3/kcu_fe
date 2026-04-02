@@ -18,10 +18,20 @@ export default function PokemonCard({id}) {
   }, [id]);
   return (
     <Card.Root maxWidth={300} onClick={() => navigate(`/pokemon/${id}`)}>
-        <Card.Header>
-            <Heading as= 'h2' textAlign='center'>
-                {`${pokemon?.koName}(${pokemon?.name})`}
-            </Heading>
+        <Card.Header 
+        minHeight="80px" 
+        display="flex" 
+        alignItems="center"
+        justifyContent="center"
+        >
+            <Box textAlign="center">
+                <Heading as='h2' fontSize='md'>
+                    {pokemon?.koName}
+                </Heading>
+                <Text fontSize='sm' color='gray.500'>
+                    ({pokemon?.name})
+                </Text>
+            </Box>
         </Card.Header>
         <Card.Body>
             <Image src={pokemon?.image} alt={pokemon?.name}/>

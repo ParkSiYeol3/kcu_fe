@@ -51,6 +51,7 @@ export default function PokemonDetails() {
 
   return (
     <HStack align="flex-start" gap={6}>
+      
       <PokemonCard id={id} />
 
       <Box flex={1} minW={0}>
@@ -64,8 +65,22 @@ export default function PokemonDetails() {
             >
               기본 정보
             </Tabs.Trigger>
-            <Tabs.Trigger value="tab-2">능력치</Tabs.Trigger>
-            <Tabs.Trigger value="tab-3">기술</Tabs.Trigger>
+            <Tabs.Trigger value="tab-2"
+            _selected={{
+              bg: "blue.500",
+              color: "white",
+            }}
+            >
+              능력치
+            </Tabs.Trigger>
+            <Tabs.Trigger value="tab-3"
+            _selected={{
+              bg: "blue.500",
+              color: "white",
+            }}
+            >
+              기술
+            </Tabs.Trigger>
           </Tabs.List>
 
           {/* Tab 1 - 기본 정보 */}
