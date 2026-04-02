@@ -1,8 +1,30 @@
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { getPokemon, getMoveDetail } from "../api/pokeAPI";
 import PokemonCard from "../components/PokemonCard";
 import { HStack, Box, Tabs, Stack, Text, Badge, Progress, Spinner, Button } from "@chakra-ui/react";
+import { Separator } from "@chakra-ui/react";
+
+const typeBgMap = {
+  normal: 'gray.700',
+  fire: 'orange.900',
+  water: 'blue.900',
+  grass: 'green.900',
+  electric: 'yellow.500',
+  ice: 'cyan.900',
+  fighting: 'red.900',
+  poison: 'purple.900',
+  ground: 'yellow.950',
+  flying: 'cyan.800',
+  psychic: 'pink.900',
+  bug: 'green.950',
+  rock: 'orange.950',
+  ghost: 'purple.950',
+  dragon: 'blue.950',
+  dark: 'gray.900',
+  steel: 'gray.800',
+  fairy: 'pink.800',
+};
 
 const statKoMap = {
   hp: 'HP',
@@ -22,6 +44,14 @@ const statColorMap = {
   speed: 'yellow',
 };
 
+const typeKoMap = {
+  normal: '노말', fire: '불꽃', water: '물', grass: '풀',
+  electric: '전기', ice: '얼음', fighting: '격투', poison: '독',
+  ground: '땅', flying: '비행', psychic: '에스퍼', bug: '벌레',
+  rock: '바위', ghost: '고스트', dragon: '드래곤',
+  dark: '악', steel: '강철', fairy: '페어리',
+};
+
 const PAGE_SIZE = 10;
 
 export default function PokemonDetails() {
@@ -30,6 +60,9 @@ export default function PokemonDetails() {
   const [moveDetails, setMoveDetails] = useState([]);
   const [page, setPage] = useState(1);
   const [loadingMoves, setLoadingMoves] = useState(false);
+
+  const numId = Number(id);
+  const navigate = useNavigate();
 
   // 포켓몬 기본 데이터
   useEffect(() => {
@@ -50,9 +83,31 @@ export default function PokemonDetails() {
   }, [page, pokemon]);
 
   return (
+    <Box
+    bg={typeBgMap[pokemon?.types?.[0]] ?? 'gray.900'}
+    minH="100vh"
+    p={6}
+    transition="background 0.5s ease"  // 포켓몬 이동 시 배경색 부드럽게 전환
+    >
     <HStack align="flex-start" gap={6}>
-      
+      <Box>
       <PokemonCard id={id} />
+      <HStack justify="space-between" mb={4}>
+          <Button
+            onClick={() => navigate(`/pokemon/${numId - 1}`)}
+            disabled={numId <= 1}
+          >
+            ◀ {numId > 1 ? `#${numId - 1}` : ''}
+          </Button>
+          <Text fontWeight="bold">#{numId}</Text>
+          <Button
+            onClick={() => navigate(`/pokemon/${numId + 1}`)}
+            disabled={numId >= 151}
+          >
+            {numId < 151 ? `#${numId + 1}` : ''} ▶
+          </Button>
+        </HStack>
+      </Box>
 
       <Box flex={1} minW={0}>
         <Tabs.Root variant="enclosed" fitted defaultValue="tab-1">
@@ -62,6 +117,7 @@ export default function PokemonDetails() {
               bg: "blue.500",
               color: "white",
             }}
+            _hover={{color:'blue.500', bg:{base:'red.400', _dark:'red.200'}}}
             >
               기본 정보
             </Tabs.Trigger>
@@ -70,6 +126,7 @@ export default function PokemonDetails() {
               bg: "blue.500",
               color: "white",
             }}
+            _hover={{color:'blue.500', bg:{base:'red.400', _dark:'red.200'}}}
             >
               능력치
             </Tabs.Trigger>
@@ -78,6 +135,7 @@ export default function PokemonDetails() {
               bg: "blue.500",
               color: "white",
             }}
+            _hover={{color:'blue.500', bg:{base:'red.400', _dark:'red.200'}}}
             >
               기술
             </Tabs.Trigger>
@@ -87,17 +145,20 @@ export default function PokemonDetails() {
           <Tabs.Content value="tab-1">
             <Stack gap={3}>
               <Box>
-                <Text fontWeight="bold">📏 키 / 몸무게</Text>
-                <Text>{pokemon?.height}m / {pokemon?.weight}kg</Text>
+                <Text fontWeight="bold">📏 키, 몸무게</Text>
+                <Text>{pokemon?.height}m, {pokemon?.weight}kg</Text>
               </Box>
+              <Separator variant="dashed"/>
               <Box>
                 <Text fontWeight="bold">✨ 특성</Text>
                 <Text>{pokemon?.abilities.join(', ')}</Text>
               </Box>
+              <Separator variant="dashed"/>
               <Box>
                 <Text fontWeight="bold">🌍 세대 / 서식지</Text>
                 <Text>{pokemon?.generation} / {pokemon?.habitat}</Text>
               </Box>
+              <Separator variant="dashed"/>
               <Box>
                 <Text fontWeight="bold">📎 분류</Text>
                 <Box>
@@ -105,6 +166,7 @@ export default function PokemonDetails() {
                   {pokemon?.isMythical && <Badge colorPalette="purple" mr={1}>환상</Badge>}
                   {pokemon && !pokemon.isLegendary && !pokemon.isMythical && <Text>일반</Text>}
                 </Box>
+                <Separator variant="dashed"/>
               </Box>
               <Box>
                 <Text fontWeight="bold">ⓘ 정보</Text>
@@ -148,7 +210,7 @@ export default function PokemonDetails() {
                   <Box display="flex" justifyContent="space-between" alignItems="center" mb={1}>
                     <Text fontWeight="bold">{move.koName}</Text>
                     <Box display="flex" gap={2}>
-                      <Badge>{move.type}</Badge>
+                      <Badge>{typeKoMap[move.type] ?? move.type}</Badge>
                       <Badge colorPalette={
                         move.damageClass === 'physical' ? 'red' :
                         move.damageClass === 'special' ? 'purple' : 'gray'
@@ -166,7 +228,11 @@ export default function PokemonDetails() {
                   <Text fontSize="sm" color="gray.500">{move.description}</Text>
                 </Box>
               ))}
-              {loadingMoves && <Spinner />}
+              {loadingMoves && 
+              <Spinner 
+              size="sm" 
+              color="red.500"
+              />}
               {!loadingMoves && pokemon && page * PAGE_SIZE < pokemon.moves.length && (
                 <Button variant="outline" onClick={() => setPage(p => p + 1)}>
                   더 보기 ({Math.min(page * PAGE_SIZE, pokemon.moves.length)} / {pokemon.moves.length})
@@ -174,9 +240,9 @@ export default function PokemonDetails() {
               )}
             </Stack>
           </Tabs.Content>
-
         </Tabs.Root>
       </Box>
     </HStack>
+    </Box>
   );
 }

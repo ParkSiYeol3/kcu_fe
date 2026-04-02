@@ -5,7 +5,7 @@ import TypeBadge from "./TypeBadge";
 import { useNavigate } from "react-router-dom";
 
 
-export default function PokemonCard({id}) {
+export default function PokemonCard({id, selectedType}) {
   const [pokemon, setPokemon] = useState(null);
   const navigate = useNavigate();
 
@@ -16,6 +16,11 @@ export default function PokemonCard({id}) {
     }
     fetchData()
   }, [id]);
+
+  if (selectedType && pokemon && !pokemon.types.includes(selectedType)) {
+    return null;
+  }
+
   return (
     <Card.Root maxWidth={300} onClick={() => navigate(`/pokemon/${id}`)}>
         <Card.Header 
@@ -35,12 +40,12 @@ export default function PokemonCard({id}) {
         </Card.Header>
         <Card.Body>
             <Image src={pokemon?.image} alt={pokemon?.name}/>
-            <HStack justify={'center'}>
+            <HStack justify={'center'} flexWrap="wrap">
                 {pokemon?.types.map((type, idx) => 
                 <TypeBadge key={idx} typeName={type}/>
                 )}
             </HStack>
-            <Text
+            {/* <Text
                 textAlign='center'
                 fontweight='bold'
                 paddingTop={4}
@@ -52,7 +57,7 @@ export default function PokemonCard({id}) {
                 {pokemon?.moves.map((move, idx) => {
                     return <Text key={idx}>{move}</Text>
                 })}
-            </Box>
+            </Box> */}
         </Card.Body>
     </Card.Root>
   )
