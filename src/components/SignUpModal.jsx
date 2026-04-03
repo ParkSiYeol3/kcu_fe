@@ -4,42 +4,62 @@ import { useEffect, useState } from "react";
 import { signUp } from "../services/auth_sign_up";
 import { firebaseErrorMessages } from "../config/firebaseError";
 import GoogleLoginButton from "./GoogleLoginButton";
+import z from "zod";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+
+const signupSchema = z.object({
+  email: z.email("올바른 이메일 형식이 아닙니다."),
+  password: z.string()
+    .min(6, "비밀번호는 최소 6자 이상이어야 합니다.")
+    .regex(/[!@#$%^&*()]/, "특수문자를 포함해야 합니다")
+    .regex(/[0-9]/, "숫자를 포함해야 합니다.")
+    .regex(/[a-zA-Z]/, "영문자를 포함해야 합니다."),
+  passwordConfirm: z.string()
+}).refine((d)=> d.password === d.passwordConfirm, {
+  message:"비밀번호 불일치",
+  path:['passwordConfirm']
+})
 
 export default function SignUpModal() {
   const [open, setOpen] = useState(false);
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [passwordConfirm, setPasswordConfirm] = useState("");
-  const [error, setError] = useState("");
+  const [firebaseError, setFirebaseError] = useState("");
 
-  const handleSignUp = async (e) => {
-    e.preventDefault();
-    if(password !== passwordConfirm) {
-      setError("비밀번호가 일치하지 않습니다.");
-      return;
-    }
+  const {
+    register,
+    handleSubmit,
+    formState: {errors, isValid},
+    reset
+  } = useForm({
+    resolver: zodResolver(signupSchema),
+    mode: "onChange",
+    defaultValues: {email:"", password:"", passwordConfirm:""}
+  })
+
+  const onSubmit = async (data) => {
+    setFirebaseError("")
 
     try {
-      const user = await signUp(email, password);
+      const user = await signUp(data.email, data.password);
       console.log("회원가입 성공:", user)
       setOpen(false)
-      setEmail("")
-      setPassword("")
-      setPasswordConfirm("")
+      reset()
     } catch(err) {
       const errMsg = firebaseErrorMessages[err.code] || `회원가입 실패: ${err}`
-      setError(errMsg)
+      setFirebaseError(errMsg)
       console.error("회원가입 실패: ", err)
     }
   };
 
   useEffect(()=> {
     if(!open) {
-      setEmail("");
-      setPassword("");
-      setPasswordConfirm("");
+      reset()
     }
   }, [open])
+
+  useEffect(()=> {
+    console.log(errors)
+  }, [errors])
 
   return (
     <Dialog.Root open={open} onOpenChange={(e) => setOpen(e.open)}>
@@ -62,45 +82,41 @@ export default function SignUpModal() {
             </Dialog.CloseTrigger>
           </Dialog.Header>
           <Dialog.Body>
-            <Fieldset.Root invalid={!!error}> 
-              <Field.Root mb={4}>
+            <Fieldset.Root invalid={!isValid || !!firebaseError}> 
+              <Field.Root mb={4} invalid={!!errors.email}>
                 <Field.Label>이메일</Field.Label>
                 <Input 
-                  type="text"
                   placeholder="이메일을 입력하세요"
-                  value={email}
-                  onChange={(e)=>setEmail(e.target.value)}
-                />
+                  type="text"
+                  {...register("email")}
+                  />
+                <Field.ErrorText>{errors.email?.message}</Field.ErrorText>
               </Field.Root>
-              <Field.Root mb={4}>
+              <Field.Root mb={4} invalid={!!errors.password}>
                 <Field.Label>비밀번호</Field.Label>
                 <PasswordInput 
-                  value={password}
-                  onChange={(e)=>{
-                    return setPassword(e.target.value)
-                  }}
-                />
+                  {...register("password")}
+                  />
+                <Field.ErrorText>{errors.password?.message}</Field.ErrorText>
               </Field.Root>
-              <Field.Root mb={4}>
+              <Field.Root mb={4} invalid={!!errors.passwordConfirm}>
                 <Field.Label>비밀번호 확인</Field.Label>
                 <PasswordInput 
-                  value={passwordConfirm}
-                  onChange={(e)=>{
-                    return setPasswordConfirm(e.target.value)
-                  }}
-                  onKeyDown={(e) => e.key === 'Enter' && handleSignUp(e)}
-                />
+                  {...register("passwordConfirm")}
+                  />
+                <Field.ErrorText>{errors.passwordConfirm?.message}</Field.ErrorText>
               </Field.Root>
-              <Fieldset.ErrorText>{error}</Fieldset.ErrorText>
+              <Fieldset.ErrorText>
+              {
+                  firebaseError
+              }
+              </Fieldset.ErrorText>
               <Button
                 type="submit"
-                onClick={handleSignUp}
+                onClick={handleSubmit(onSubmit)}
                 width="100%"
                 mt={4}
-                disabled={
-                  email === "" || password==="" || passwordConfirm === ""
-                } 
-              >
+                >
                 회원가입
               </Button>
             </Fieldset.Root>

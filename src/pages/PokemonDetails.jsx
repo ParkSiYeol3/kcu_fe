@@ -5,27 +5,6 @@ import PokemonCard from "../components/PokemonCard";
 import { HStack, Box, Tabs, Stack, Text, Badge, Progress, Spinner, Button } from "@chakra-ui/react";
 import { Separator } from "@chakra-ui/react";
 
-const typeBgMap = {
-  normal: 'gray.700',
-  fire: 'orange.900',
-  water: 'blue.900',
-  grass: 'green.900',
-  electric: 'yellow.500',
-  ice: 'cyan.900',
-  fighting: 'red.900',
-  poison: 'purple.900',
-  ground: 'yellow.950',
-  flying: 'cyan.800',
-  psychic: 'pink.900',
-  bug: 'green.950',
-  rock: 'orange.950',
-  ghost: 'purple.950',
-  dragon: 'blue.950',
-  dark: 'gray.900',
-  steel: 'gray.800',
-  fairy: 'pink.800',
-};
-
 const statKoMap = {
   hp: 'HP',
   attack: '공격',
@@ -83,12 +62,6 @@ export default function PokemonDetails() {
   }, [page, pokemon]);
 
   return (
-    <Box
-    bg={typeBgMap[pokemon?.types?.[0]] ?? 'gray.900'}
-    minH="100vh"
-    p={6}
-    transition="background 0.5s ease"  // 포켓몬 이동 시 배경색 부드럽게 전환
-    >
     <HStack align="flex-start" gap={6}>
       <Box>
       <PokemonCard id={id} />
@@ -243,6 +216,5 @@ export default function PokemonDetails() {
         </Tabs.Root>
       </Box>
     </HStack>
-    </Box>
   );
 }
