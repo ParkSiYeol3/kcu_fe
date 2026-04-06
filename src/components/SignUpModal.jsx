@@ -1,12 +1,17 @@
-import { Button, Dialog, Field, Fieldset, HStack, Icon, Input, Portal, Separator, Text } from "@chakra-ui/react";
+import { Button, Dialog, Field, Fieldset, FileUpload, HStack, Icon, Input, Portal, Separator, Text } from "@chakra-ui/react";
 import { PasswordInput } from "./ui/password-input";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { signUp } from "../services/auth_sign_up";
 import { firebaseErrorMessages } from "../config/firebaseError";
 import GoogleLoginButton from "./GoogleLoginButton";
 import z from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import authService from "../services/authService";
+import { AuthContext } from "../contexts/AuthProvider"
+import { LuUpload } from "react-icons/lu";
+import { uploadAvatar } from "../services/storage";
+import { updateProfile } from "firebase/auth";
 
 const signupSchema = z.object({
   email: z.email("올바른 이메일 형식이 아닙니다."),
@@ -24,11 +29,14 @@ const signupSchema = z.object({
 export default function SignUpModal() {
   const [open, setOpen] = useState(false);
   const [firebaseError, setFirebaseError] = useState("");
+  const [avatarFile, setAvatarFile] = useState(null);
+  
+  const {signUpWithEmail} = authService();
 
   const {
     register,
     handleSubmit,
-    formState: {errors, isValid},
+    formState: {errors, isValid, isSubmitting},
     reset
   } = useForm({
     resolver: zodResolver(signupSchema),
@@ -38,11 +46,11 @@ export default function SignUpModal() {
 
   const onSubmit = async (data) => {
     setFirebaseError("")
-
     try {
-      const user = await signUp(data.email, data.password);
+      const user = await signUpWithEmail(data.email, data.password, avatarFile);
       console.log("회원가입 성공:", user)
-      setOpen(false)
+      
+      setOpen(false);
       reset()
     } catch(err) {
       const errMsg = firebaseErrorMessages[err.code] || `회원가입 실패: ${err}`
@@ -111,11 +119,29 @@ export default function SignUpModal() {
                   firebaseError
               }
               </Fieldset.ErrorText>
+              <Field.Root mb={4}>
+                <Field.Label>프로필 이미지(선택)</Field.Label>
+                <FileUpload.Root
+                  maxFiles={1}
+                  accept="image/*"
+                  onFileAccept={(details) => setAvatarFile(details.files[0])}
+                >
+                  <FileUpload.HiddenInput />
+                  <FileUpload.Dropzone p={3} minH="80px">
+                    <Icon color="fg.muted" as={LuUpload} />
+                    <FileUpload.DropzoneContent>
+                      드래그 또는 클릭하며 이미지 선택
+                    </FileUpload.DropzoneContent>
+                  </FileUpload.Dropzone>
+                  <FileUpload.List showSize clearable/>
+                </FileUpload.Root>
+              </Field.Root>
               <Button
                 type="submit"
                 onClick={handleSubmit(onSubmit)}
                 width="100%"
                 mt={4}
+                loading={isSubmitting}
                 >
                 회원가입
               </Button>
